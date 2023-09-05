@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+:root {
+    --mycolor1: #B9E397;
+    --mycolor2: #224C00;
+    --mycolor3: #609732;
+    --mycolor4: #82BBB5;
+    --mycolor5: #407F7F;
+    --mycolor6: #407F7F;
+    --mycolor7: #FFE2AA;
+    --mycolor8: #CA884B;
+    --mycolor9: #CCA142;
+}
+.demo{
+    border: 5px solid seagreen;
+    margin: 15px;
+    padding: 15px;
+}
+.body{
+    font-family: 'Noto Sans TC',sans-serif;
+}
+.fw-100{
+    font-weight: 100;
+}
+.fw-300{
+    font-weight: 300;
+}
+.fw-400{
+    font-weight: 400;
+}
+.fw-500{
+    font-weight: 500;
+}
+.fw-700{
+    font-weight: 700;
+}
+.fw-900{
+    font-weight: 900;
+}
+.box01{
+    height: 200px;
+    padding: 10px;
+    margin:15px;
+    border: 2px solid #224C00;
+}
+.box02{
+    height: 120px;
+    border: 2px solid #CA884B;
+}
+.bg-cover{
+    background-size:cover ;
+}
+.bg-center{
+    background-position: center center;
+}
+.footer{
+    background-color: #CA884B;
+    height:100px;
+    text-align: center;
+    color: white;
+    line-height: 100px;
+}
