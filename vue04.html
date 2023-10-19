@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mycss.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <style>
+        .banner {
+            background-image: url(img/lake3.jpg);
+            height: 280px;
+        }
+        .card-height{
+            height: 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="banner bg-cover bg-center">
+            <h2 class="text-light text-center p-5">{{title}}</h2>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6" style="margin-top: -20px;">
+                    <select name="" id="" class="form-control" v-model="currentLocation">
+                        <option value="">-----全部----</option>
+                        <option :value="item" v-for="(item,key) in regions">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mt-3" v-for="(item,key) in filterData[currentPage]">
+                    <div class="card border-danger h-100">
+                                                                             <!--vue內不能出現-的符號，
+                                                                            background-image要改backgroundImage-->
+                        <div class="bg-cover bg-center card-height" :style="{backgroundImage: 'url('+item.Picture1+')'}">
+                        </div>
+                        <div class="card-body" >
+                            <h5>{{item.Name}}</h5>
+                            <h5>地址:{{item.Add}}</h5>
+                            <h5>電話:{{item.Tel}}</h5>
+                            <h5>時間:{{item.Opentime}}</h5>
+                            <h5 v-if="item.Ticketinfo!=''">費用:{{item.Ticketinfo}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row  justify-content-center">
+            <div class="col-6 mt-3 ">
+            <nav aria-label="Page navigation example" >
+                <ul class="pagination" >
+                  <li class="page-item"><a class="page-link" href="#" @click.prevent="currentPage-=1">Previous</a></li>
+                  <li class="page-item" v-for="(item,key) in filterData">
+                    <a class="page-link" href="#" @click.prevent="currentPage=(key+1)">{{key+1}}</a>
+                </li>
+           
+                  <li class="page-item"><a class="page-link" href="#" @click.prevent="currentPage+=1">Next</a></li>
+                </ul>
+              </nav>
+        </div>
+     </div>
+
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.7.0.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <Script>
+        //物件
+        const App = {
+            data() {
+                return {
+                    title: "高雄好好行",
+                    data: [],
+                    currentPage:0,
+                    regions:[],//紀錄行政區
+                    currentLocation:"",//紀錄選取的行政區
+                }
+            },
+            created() {
+                const vm=this;
+                axios.get('js/kason.json')
+                    .then(function (response) {
+                        // handle success
+                        console.log(response.data.data.XML_Head.Infos.Info);
+                        vm.data=response.data.data.XML_Head.Infos.Info;
+                        vm.getRegion();
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                    .finally(function () {
+                        // always executed
+                    });
+
+            },
+            computed:{
+                filterData() {
+                    const vm=this;
+                    let items=[];//決定區域後，篩選過的資料
+                    if(vm.currentLocation!=""){
+                        //方法一
+                        // vm.data.forEach((item,key)=>{
+                        //     if(item.Add.substring(6,item.Add.indexOf("區",0)+1)==vm.currentLocation){
+                        //     items.push(item);
+                        // }
+                        // })
+
+                        //方法二
+                        items=vm.data.filter((item,key)=>{
+                            return item.Add.substring(6,item.Add.indexOf("區",0)+1)==vm.currentLocation;
+                        });
+
+                        
+                       
+                    }else{
+                        //顯示全部
+                        items=vm.data;
+                    }
+
+                    const newData=[];
+                    items.forEach((item,key) => {
+                        if(key%30==0){
+                            newData.push([]);
+                        }
+                        const page=parseInt(key/30);
+                        newData[page].push(item);
+                    });
+                    return newData;
+
+                }
+            },
+            methods:{
+                getRegion(){
+                    const vm=this;
+                    const regions=new Set(); //只能存放唯一一筆資料
+                    vm.data.forEach((item,key)=>{
+                        //console.log(item.Add.indexOf("區",0)); 從index 0開始算， 區index為多少
+                        console.log(item.Add.substring(6,item.Add.indexOf("區",0)+1));//index 6開始往後到 區index
+                        regions.add(item.Add.substring(6,item.Add.indexOf("區",0)+1));
+                    })
+                    vm.regions=Array.from(regions);//Set轉陣列
+                }
+            }
+
+        }
+        //產生物件，掛載至app
+        Vue.createApp(App).mount("#app")
+    </Script>
+</body>
+
+</html>
