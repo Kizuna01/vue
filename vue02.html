@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mycss.css">
+    <style>
+        .box01{
+            width: 200px;
+            transition: transform 1s;
+        }
+        .rotate{
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="demo">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link " href="#" :class="{'active':mylink=='台中市'}" v-on:click="mylink = '台中市'">台中市</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" :class="{'active':mylink=='新北市'}" v-on:click="mylink = '新北市'">新北市</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" :class="{'active':mylink=='台南市'}" v-on:click="mylink = '台南市'">台南市</a>
+                </li>
+            </ul>
+            <template v-for="(item,key) in list">
+                <ul class="list-group">
+                    <li class="list-group-item" v-if="item.city==mylink">
+                        {{item.city}}{{item.product}} => 一斤{{item.price}}
+                    </li>
+                </ul>
+            </template>
+        </div>
+        <div class="demo"> <!--v-on:change 變動監聽
+                                                                        v-on.change  即時監聽-->
+            <h1>文字反轉 v-on:change methos的宣告</h1>
+            <input type="text" class="form-control" v-model="text" v-on.change="r_text()">
+            <h2>{{text_re}}</h2>
+        </div>
+
+        <div class="demo"> 
+            <h1>文字清除 v-on:keyup.esc</h1><!--esc點擊放開後觸發  常用的也有keyup.enter -->
+            <input type="text" class="form-control" v-model="text" v-on:keyup.esc="clean_text()">
+            <h2>{{text_re}}</h2>
+            <h1>即時文字反轉 透過computed</h1>
+            <h2>{{c_reverseText}}</h2>
+        </div>
+
+        
+        <div class="demo">
+            <h1>正方形旋轉</h1>
+            <div class="box01" :class="{'rotate':isRotate}"></div>
+            <a href="#" class="btn btn-primary" v-on:click.prevent="isRotate = !isRotate">旋轉</a>
+        </div>
+        <div class="demo">
+            <h1>BMI計算</h1>
+            <label for="" class="form-label">身高</label>
+            <input type="number" class="form-control" v-model="height">
+            
+            <label for="" class="form-label">體重</label>
+            <input type="number" class="form-control" v-model="weight">
+
+            <a href="" class="btn btn-primary" v-on:click.prevent="bmi()">計算</a>
+            <h2>您的BMI為:{{ansBmi}}</h2>
+            <h2>您的BMI為(即時):{{c_bmi}}</h2>
+        </div>
+        <div class="demo">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" v-model="checkFood">
+                <label for="" class="form-check-label">是否點餐?</label>
+            </div>
+            <div v-if="checkFood">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" value="漢堡" v-model="checkFood_array">
+                    <label for="" class="form-check-label">漢堡</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" value="薯條" v-model="checkFood_array">
+                    <label for="" class="form-check-label">薯條</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" value="可樂" v-model="checkFood_array">
+                    <label for="" class="form-check-label">可樂</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio"  value="現金" v-model="payTpye">
+                    <label class="form-check-label" >
+                        現金
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio"  value="刷卡" v-model="payTpye">
+                    <label class="form-check-label" >
+                        刷卡
+                    </label>
+                </div>
+    
+                <select class="form-select" aria-label="Default select example"  v-model="sweet">
+                    <option disabled>選擇甜度</option>
+                    <option value="無糖">無糖</option>
+                    <option value="微糖">微糖</option>
+                    <option value="半糖">半糖</option>
+                    <option value="全糖">全糖</option>
+                  </select>
+            </div>
+            
+       
+            <hr>
+            <h1>訂購的餐點為:</h1>
+            <ul class="list-group">
+                <li class="list-group-item" v-for="(item,key) in checkFood_array">
+                    {{key+1}}.{{item}}
+                </li>
+            </ul>
+            <h1>付款方式為:{{payTpye}}</h1>
+            <h1>甜度:{{sweet}}</h1>
+        </div>
+
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <Script>
+        //物件
+        const App = {
+            data() {
+                return {
+                    text: '',
+                    text_re: '',
+                    mylink: '台中市',
+                    isRotate:false,
+                    height:160,
+                    weight:60,
+                    ansBmi:'',
+                    checkFood:false,
+                    checkFood_array:[],
+                    payTpye:'',
+                    sweet:'',
+                    list: [
+                        {
+                            product: "蘋果",
+                            price: 100,
+                            city: '台中市'
+                        },
+                        {
+                            product: "蘋果",
+                            price: 50,
+                            city: '新北市'
+                        },
+                        {
+                            product: "香蕉",
+                            price: 70,
+                            city: '新北市'
+                        },
+                        {
+                            product: "香蕉",
+                            price: 35,
+                            city: '台中市'
+                        },
+                        {
+                            product: "芭樂",
+                            price: 50,
+                            city: '台中市'
+                        },
+                        {
+                            product: "芭樂",
+                            price: 50,
+                            city: '新北市'
+                        }, {
+                            product: "芭樂",
+                            price: 50,
+                            city: '台南市'
+                        },
+                        {
+                            product: "蓮霧",
+                            price: 50,
+                            city: '台南市'
+                        },
+
+                    ],
+                    list2: ['牛排', '拉麵', '丼飯']
+
+                }
+            },
+            methods: {
+                r_text() {
+                    this.text_re = this.text.split('').reverse().join('');
+                },
+                clean_text(){
+                    this.text='';
+                    this.text_re='';
+                },
+                bmi(){
+                    this.ansBmi=this.weight/((this.height/100)*(this.height/100));
+                    this.ansBmi=this.ansBmi.toFixed(2);//四捨五入到第二位
+                }
+              
+            },
+            //就是方法，但是必須return
+            computed:{
+                c_bmi(){
+                    bmi=this.weight/((this.height/100)*(this.height/100));
+                    return bmi.toFixed(2);//四捨五入到第二位
+                },
+                c_reverseText(){
+                    return this.text.split('').reverse().join('');
+                }
+            }
+        }
+        //產生物件，掛載至app
+        Vue.createApp(App).mount("#app")
+    </Script>
+</body>
+
+</html>
