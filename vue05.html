@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>口罩地圖</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mycss.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+    <div id="app">
+        <div class="container-fluid">
+            <div class="row vh-100">
+                <div class="col-md-3 bg-info">
+                    <select name="" id="" class="form-select" v-model="currentCity" @change="getTown(currentCity)">
+                        <option value="">縣市</option>
+                        <option v-for="(item,key) in city" :value="item">{{item}}</option>
+                    </select>
+                    <select name="" id="" class="form-select mt-2" v-model="currentTown"
+                        @change="getPharmacy(currentCity,currentTown),getMap()">
+                        <option value="">鄉鎮區</option>
+                        <option v-for="(item,key) in town" :value="item">{{item}}</option>
+                    </select>
+
+                    <ul class="list-group mt-3 " v-for="(item,key) in pharmacy">
+                        <li class="list-group-item" @click="show_marker(item.name)">
+                            <h4>名稱:{{item.name}}</h4>
+                            <h4>地址:{{item.address}}</h4>
+                            <h4>電話:{{item.phone}}</h4>
+                            <h4>成人口罩:{{item.mask_adult}}</h4>
+                            <h4>兒童口罩:{{item.mask_child}}</h4>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+                <div class="col-md-9">
+                    <div id="map" class="vh-100 bg-info">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.7.0.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <Script>
+        var map;
+  
+        $(function () {
+            //產生物件，掛載至app
+            Vue.createApp(App).mount("#app");
+            map = L.map('map').setView([24.1700867, 120.6100023], 16);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+
+
+        })
+        function removeMarker() {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            })
+        }
+        //物件
+        const App = {
+            data() {
+                return {
+                    allData: [],//獲取所有縣市資料
+                    city: [],//獲取縣市名稱
+                    currentCity: "",//當前所選擇的城市
+                    town: [],//置放選擇城市後的 應帶入鄉鎮區的名稱
+                    allPharmacy: [],//獲取所有健保局資料
+                    currentTown: "",//當前所選擇的鄉鎮區
+                    pharmacy: []//置放選擇城市+鄉鎮區後 應帶入健保局的資料
+                }
+            },
+            created() {
+                const vm = this;
+                //抓取縣市資料
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "js/CityCountyData.json",
+                    async: false,
+                    success: function (data) {
+                        //console.log(data);
+                        vm.allData = data;
+                        data.forEach(function (item) {
+                            vm.city.push(item.CityName);
+                        });
+
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+
+                //抓取健保局資料
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "js/points.json",
+                    async: false,
+                    success: function (data) {
+
+                        data.features.forEach(function (item) {
+
+                            //添加經緯度 {"location","[222,333]"} 到藥局的資料
+                            item.properties["location"] = item.geometry.coordinates;
+                            vm.allPharmacy.push(item.properties);
+
+                        });
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+            },
+            methods: {
+                getTown(city) {
+                    const vm = this;
+                    vm.town = [];
+                    vm.allData.forEach(function (item) {
+                        if (item.CityName == city) {
+                            item.AreaList.forEach(function (item) {
+
+                                vm.town.push(item.AreaName);
+                            });
+                        }
+                    });
+                },
+                getPharmacy(city, town) {
+                    const vm = this;
+                    vm.pharmacy = [];
+                    vm.allPharmacy.forEach(function (item) {
+                        if (city == item['county'] && town == item['town']) {
+                            vm.pharmacy.push(item);
+                        }
+                    });
+                    //console.log(vm.pharmacy);
+                },
+                getMap() {
+                    const vm = this;
+                    var lat;
+                    var lng;
+                    var lat_first;
+                    var lng_first;
+                    removeMarker();
+                    vm.pharmacy.forEach(function (item,key) {
+                         lat = item['location'][1];//經度
+                         lng = item['location'][0];//緯度
+                        if(key==0){
+                       
+                            lat_first = item['location'][1];//經度
+                            lng_first = item['location'][0];//緯度
+                            console.log(lng_first);
+                        }
+                        var str=' <li class="list-group-item"><h4>名稱:'+item["name"]+'</h4><h4>地址:'+item["address"]+'</h4><h4>電話:'+item["phone"]+'</h4><h4>成人口罩:'+item["mask_adult"]+'</h4><h4>兒童口罩:'+item["mask_child"]+'</h4></li>'
+                        L.marker([lat, lng]).addTo(map).bindPopup(str);
+                        
+                        //顯示名稱
+                        //.openPopup()
+                        
+                        //移動至該經緯度 
+                        //map.panTo([lat, lng]);
+                    });
+                    map.setView([lat_first, lng_first]);
+                    //L.marker([lat, lng]).addTo(map).bindPopup(str).openPopup();
+                   
+                },
+                show_marker(name){
+                    const vm = this;
+                 
+                    vm.pharmacy.forEach(function(item) {
+                       
+                        if(item["name"]==name){
+                
+                            console.log(item);
+                             var str=' <li class="list-group-item"><h4>名稱:'+item["name"]+'</h4><h4>地址:'+item["address"]+'</h4><h4>電話:'+item["phone"]+'</h4><h4>成人口罩:'+item["mask_adult"]+'</h4><h4>兒童口罩:'+item["mask_child"]+'</h4></li>';
+
+                             L.marker([item['location'][1], item['location'][0]]).addTo(map).bindPopup(str).openPopup();
+                   
+                        }
+    
+                    });
+                }
+            }
+
+
+        }
+
+    </Script>
+</body>
+
+</html>
