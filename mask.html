@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://192.168.10.200/web202305/20230921-maskMap.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>口罩地圖練習</title>
+    <link rel="stylesheet" href="./mask_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./mask_files/my.css">
+    <link rel="stylesheet" href="./mask_files/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="./mask_files/MarkerCluster.css">
+    <style>
+        .marker-cluster-small{
+            background-color: rgba(170, 5, 101, 0.7);
+        }
+        .marker-cluster-small div{
+            background-color: rgba(49, 197, 128, 0.7);
+        }
+        .marker-cluster-medium {
+            background-color: rgba(69, 34, 228, 0.7);
+        }
+        .marker-cluster-medium  div{
+            background-color: rgba(207, 160, 58, 0.7);
+        }
+        .marker-cluster-large {
+            background-color: rgba(140, 236, 145, 0.7);
+        }
+        .marker-cluster-large div{
+            background-color: rgba(173, 99, 216, 0.7);
+        }
+        .marker-cluster div{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-top: 5px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 900;
+        }
+        .marker-cluster span{
+            line-height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row vh-100">
+            <div class="col-md-3 bg-info">
+                <select class="form-select mt-3" id="select_city"><option selected="" class="text-center h4">--縣市--</option><option value="臺北市">臺北市</option><option value="基隆市">基隆市</option><option value="新北市">新北市</option><option value="連江縣">連江縣</option><option value="宜蘭縣">宜蘭縣</option><option value="釣魚臺">釣魚臺</option><option value="新竹市">新竹市</option><option value="新竹縣">新竹縣</option><option value="桃園市">桃園市</option><option value="苗栗縣">苗栗縣</option><option value="臺中市">臺中市</option><option value="彰化縣">彰化縣</option><option value="南投縣">南投縣</option><option value="嘉義市">嘉義市</option><option value="嘉義縣">嘉義縣</option><option value="雲林縣">雲林縣</option><option value="臺南市">臺南市</option><option value="高雄市">高雄市</option><option value="南海島">南海島</option><option value="澎湖縣">澎湖縣</option><option value="金門縣">金門縣</option><option value="屏東縣">屏東縣</option><option value="臺東縣">臺東縣</option><option value="花蓮縣">花蓮縣</option></select>
+                <select class="form-select mt-3" id="select_region">
+                    <option selected="" class="text-center h4">--鄉鎮區--</option>
+                    <option value="1">西屯區</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <ul class="list-group mt-3" id="mylist" style="height: 85vh; overflow: scroll;">
+                    <li class="list-group-item">
+                        <h4>名稱: XXXXXXX</h4>
+                        <h4>地址: XXXXXXX</h4>
+                        <h4>電話: XXXXXXXXXX</h4>
+                        <h4>成人口罩: <span class="h3 text-danger fw-900">99</span>個</h4>
+                        <h4>兒童口罩: <span class="h3 text-success fw-900">99</span>個</h4>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-9 bg-warning p-0">
+                <div id="map" class="vh-100 bg-success leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative; outline-style: none;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="./mask_files/3528.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(584px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(584px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3528(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(328px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3528(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(840px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(584px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(328px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(840px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(328px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(840px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(584px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3528(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(72px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3528(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1096px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(584px, 829px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(328px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(840px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(72px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1096px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(72px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1096px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(328px, 829px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(840px, 829px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(72px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1096px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(72px, 829px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1096px, 829px, 0px); opacity: 1;"><img alt="" src="./mask_files/3528(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-184px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3528(6).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1352px, 317px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-184px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3527(6).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1352px, 61px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-184px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3529(6).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1352px, 573px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-184px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3526(6).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1352px, -195px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-184px, 829px, 0px); opacity: 1;"><img alt="" src="./mask_files/3530(6).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1352px, 829px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1.75118e+06px, 903393px, 0px) scale(4096);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="http://192.168.10.200/web202305/20230921-maskMap.html#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="http://192.168.10.200/web202305/20230921-maskMap.html#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com/" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</div></div></div></div>
+            </div>
+        </div>
+    </div>
+    <script src="./mask_files/bootstrap.bundle.min.js.下載"></script>
+    <script src="./mask_files/jquery-3.7.0.min.js.下載"></script>
+    <script src="./mask_files/leaflet.js.下載" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="./mask_files/leaflet.markercluster.js.下載"></script>
+    <script src="./mask_files/leaflet-color-markers.js.下載"></script>
+    <script>
+        var allCity = []; //存儲所有縣市鄉鎮區資料
+        var selectedCity = '';      //已選取的單一筆縣市名稱
+        var selectedRegion = '';   //已以選取的單一筆鄉鎮區名稱
+        var selectedAreaList = [];   //已選取的縣市所包含的所有鄉鎮區資料
+
+        var points = []; //儲存所以健保局的藥局資料
+        var pointsList = []; //儲存所選取的該縣市鄉鎮區的所有藥局資料
+        var map;
+
+        $(function () {
+            //draw map
+            map = L.map('map').setView([24.1716771, 120.6093461], 13);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // L.marker([24.1716771, 120.6093461]).addTo(map)
+            //     .bindPopup('資訊服務股工廠')
+            //     .openPopup();
+
+            var markers = new L.markerClusterGroup().addTo(map);
+
+            //抓取縣市資料CityCountyData.json
+            $.ajax({
+                type: "GET",
+                url: "js/CityCountyData.json",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    allCity = data;
+                },
+                error: function () {
+                    alert("error-js/CityCountyData.json");
+                }
+            });
+
+            //抓取健保局的藥局資料
+            $.ajax({
+                type: "GET",
+                url: "js/points.json",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    // console.log(data);
+                    points = data.features;
+                    console.log(points);
+                },
+                error: function () {
+                    alert("js/points.json");
+                }
+            });
+
+            //渲染縣市選單
+            $("#select_city").empty();
+            $("#select_city").append('<option selected class="text-center h4">--縣市--</option>');
+            allCity.forEach(function (item) {
+                // console.log(item.CityName);
+                var strHTML = '<option value="' + item.CityName + '">' + item.CityName + '</option>';
+                $("#select_city").append(strHTML);
+            });
+
+            //監聽#select_city 縣市選單資料是否有改變
+            $("#select_city").change(function () {
+                console.log($(this).val());
+                selectedCity = $(this).val();
+
+                //依據所選取的縣市名稱 去尋找該縣市名稱的鄉鎮區資料
+                allCity.forEach(function (item) {
+                    if (item.CityName == selectedCity) {
+                        selectedAreaList = item.AreaList;
+                    }
+                });
+                console.log(selectedAreaList);
+
+                //渲染鄉鎮區選單
+                $("#select_region").empty();
+                $("#select_region").append('<option selected class="text-center h4">--鄉鎮區--</option>');
+                selectedAreaList.forEach(function (item) {
+                    // console.log(item.CityName);
+                    var strHTML = '<option value="' + item.AreaName + '">' + item.AreaName + '</option>';
+                    $("#select_region").append(strHTML);
+                });
+            });
+
+            //監聽#select_region 鄉鎮區選單資料是否有改變
+            $("#select_region").change(function () {
+                console.log($(this).val());
+                selectedRegion = $(this).val();
+
+                pointsList = [];
+                points.forEach(function (item) {
+                    if (item.properties.county == selectedCity && item.properties.town == selectedRegion) {
+                        pointsList.push(item);
+                    }
+                });
+                console.log(pointsList);
+
+                //渲染藥局資料到 list-group #mylist
+                //渲染藥局資料到 產生marker至map
+                $("#mylist").empty(); //清空list-group
+                removeMarker(); //清空marker
+                pointsList.forEach(function (item, key) {
+                    var lat = item.geometry.coordinates[1]; //經度
+                    var lng = item.geometry.coordinates[0]; //緯度
+                    var strHTML = '<li class="list-group-item" data-name="' + item.properties.name + '" data-address="' + item.properties.address + '" data-phone="' + item.properties.phone + '" data-mask_adult="' + item.properties.mask_adult + '" data-mask_child="' + item.properties.mask_child + '" data-lat="' + lat + '" data-lng="' + lng + '"><h4>名稱: ' + item.properties.name + '</h4><h4>地址: ' + item.properties.address + '</h4><h4>電話: ' + item.properties.phone + '</h4><h4>成人口罩: <span class="h3 text-danger fw-900">' + item.properties.mask_adult + '</span>個</h4><h4>兒童口罩: <span class="h3 text-success fw-900">' + item.properties.mask_child + '</span>個</h4></li>';
+                    $("#mylist").append(strHTML);
+
+
+                    //渲染藥局資料 產生marker至map
+                    var strPOPUPHTML = '<div class="card"><h4>名稱: ' + item.properties.name + '</h4><h4>地址: ' + item.properties.address + '</h4><h4>電話: ' + item.properties.phone + '</h4><h4>成人口罩: <span class="h3 text-danger fw-900">' + item.properties.mask_adult + '</span>個</h4><h4>兒童口罩: <span class="h3 text-success fw-900">' + item.properties.mask_child + '</span>個</h4></div>';
+                    // L.marker([lat, lng]).addTo(map).bindPopup(strPOPUPHTML);
+                    markers.addLayer(L.marker([lat, lng], {icon: yellowIcon}).bindPopup(strPOPUPHTML));
+
+                    //地圖移動至第一家藥局
+                    if(key == 0){
+                        map.panTo([lat, lng])
+                    }
+
+                });
+
+                //監聽#mylist click事件 抓取 data-XXX 參數
+                $("#mylist .list-group-item").click(function(){
+                    console.log($(this).data("name"));
+                    console.log($(this).data("address"));
+                    console.log($(this).data("phone"));
+                    console.log($(this).data("mask_adult"));
+                    console.log($(this).data("mask_child"));
+                    console.log($(this).data("lat"));
+                    console.log($(this).data("lng"));
+
+                    var strPOPUPHTML = '<div class="card"><h4>名稱: ' + $(this).data("name") + '</h4><h4>地址: ' + $(this).data("address") + '</h4><h4>電話: ' + $(this).data("phone") + '</h4><h4>成人口罩: <span class="h3 text-danger fw-900">' + $(this).data("mask_adult") + '</span>個</h4><h4>兒童口罩: <span class="h3 text-success fw-900">' + $(this).data("mask_child") + '</span>個</h4></div>';
+                    L.marker([$(this).data("lat"), $(this).data("lng")]).addTo(map)
+                        .bindPopup(strPOPUPHTML).openPopup();;
+
+                });
+            });
+        })
+        //清除所有的marker
+        function removeMarker() {
+            map.eachLayer(function(layer){
+                if(layer instanceof L.Marker){
+                    map.removeLayer(layer);
+                }
+            });
+        }
+    </script>
+
+
+
+</body></html>
